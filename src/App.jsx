@@ -127,10 +127,21 @@ function App() {
     setForm((current) => ({ ...current, number: String(Math.max(nextLength, 0) + 1) }))
   }
 
+  const deleteAllGifts = () => {
+    if (!confirm('전체 데이터를 삭제할까요?')) return
+
+    setGifts([])
+    setForm((current) => ({ ...current, number: '1' }))
+    setSummaryEditGift(null)
+  }
+
   return (
-    <main className="min-h-screen bg-[#f5f7fb] px-4 pb-20 pt-5 text-slate-950">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,#ffe4e6_0,#f8fafc_34%,#eef6ff_100%)] px-4 pb-24 pt-5 text-slate-950">
       <section className={`mx-auto ${activeTab === 'summary' ? 'max-w-5xl' : 'max-w-[460px]'}`}>
-        <h1 className="mb-5 text-center text-3xl font-extrabold tracking-normal">축의금 장부</h1>
+        <header className="mb-5 text-center">
+          <h1 className="text-3xl font-extrabold tracking-normal">축의금 장부</h1>
+          <div className="mx-auto mt-2 h-1 w-12 rounded-full bg-gradient-to-r from-rose-400 to-blue-500" />
+        </header>
 
         {activeTab === 'home' ? (
           <>
@@ -151,6 +162,7 @@ function App() {
             totalTickets={totalTickets}
             onEdit={setSummaryEditGift}
             onDelete={deleteGift}
+            onDeleteAll={deleteAllGifts}
           />
         )}
       </section>
@@ -166,8 +178,8 @@ function App() {
         />
       )}
 
-      <nav className="fixed inset-x-0 bottom-0 border-t border-neutral-200 bg-white">
-        <div className="mx-auto grid max-w-[460px] grid-cols-2">
+      <nav className="fixed inset-x-0 bottom-0 border-t border-white/70 bg-white/85 px-4 py-3 shadow-[0_-12px_30px_rgba(15,23,42,0.08)] backdrop-blur">
+        <div className="mx-auto grid max-w-[460px] grid-cols-2 rounded-full bg-slate-100 p-1">
           <TabButton active={activeTab === 'home'} onClick={() => setActiveTab('home')}>
             홈
           </TabButton>
@@ -182,11 +194,14 @@ function App() {
 
 function HomeForm({ form, nameInputRef, updateForm, addAmount, addTickets, onSubmit }) {
   return (
-    <form onSubmit={onSubmit} className="space-y-4 rounded-lg bg-white p-4 shadow-sm ring-1 ring-slate-200">
+    <form
+      onSubmit={onSubmit}
+      className="space-y-4 rounded-[18px] bg-white/90 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.10)] ring-1 ring-white/80 backdrop-blur"
+    >
       <div className="grid grid-cols-[104px_1fr] items-end gap-3">
         <div>
           <span className="mb-1.5 block text-sm font-extrabold text-slate-500">번호</span>
-          <div className="flex h-[46px] items-center justify-center rounded-md bg-slate-950 text-2xl font-extrabold text-white">
+          <div className="flex h-[46px] items-center justify-center rounded-xl bg-slate-950 text-2xl font-extrabold text-white shadow-sm">
             {form.number}
           </div>
         </div>
@@ -211,13 +226,13 @@ function HomeForm({ form, nameInputRef, updateForm, addAmount, addTickets, onSub
         />
       </label>
 
-      <div className="rounded-lg bg-slate-50 p-3 ring-1 ring-slate-100">
+      <div className="rounded-2xl bg-gradient-to-br from-slate-50 to-white p-3 ring-1 ring-slate-100">
         <div className="mb-3 flex items-center gap-3">
           <span className="flex-1 text-xl font-extrabold">현재 금액: {formatWon(form.amount)}</span>
           <button
             type="button"
             onClick={() => updateForm('amount', 0)}
-            className="rounded-md bg-red-50 px-3 py-2 text-base font-extrabold text-red-600 ring-1 ring-red-200 transition hover:bg-red-100"
+            className="rounded-full bg-rose-50 px-3 py-2 text-sm font-extrabold text-rose-600 ring-1 ring-rose-200 transition hover:bg-rose-100"
           >
             금액 초기화
           </button>
@@ -229,7 +244,7 @@ function HomeForm({ form, nameInputRef, updateForm, addAmount, addTickets, onSub
               key={label}
               type="button"
               onClick={() => addAmount(value)}
-              className="h-[50px] rounded-md bg-[#eeeeee] text-2xl font-extrabold transition hover:bg-[#e4e4e4]"
+              className="h-[50px] rounded-xl bg-white text-xl font-extrabold shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-md"
             >
               {label}
             </button>
@@ -237,13 +252,13 @@ function HomeForm({ form, nameInputRef, updateForm, addAmount, addTickets, onSub
         </div>
       </div>
 
-      <div className="rounded-lg bg-blue-50 p-3 ring-1 ring-blue-100">
+      <div className="rounded-2xl bg-gradient-to-br from-blue-50 to-white p-3 ring-1 ring-blue-100">
         <div className="mb-3 flex items-center gap-3">
           <span className="flex-1 text-xl font-extrabold">식권: {form.tickets}장</span>
           <button
             type="button"
             onClick={() => updateForm('tickets', 0)}
-            className="rounded-md bg-red-50 px-3 py-2 text-base font-extrabold text-red-600 ring-1 ring-red-200 transition hover:bg-red-100"
+            className="rounded-full bg-rose-50 px-3 py-2 text-sm font-extrabold text-rose-600 ring-1 ring-rose-200 transition hover:bg-rose-100"
           >
             식권 초기화
           </button>
@@ -255,7 +270,7 @@ function HomeForm({ form, nameInputRef, updateForm, addAmount, addTickets, onSub
               key={value}
               type="button"
               onClick={() => addTickets(value)}
-              className="h-[50px] rounded-md bg-blue-100 text-2xl font-extrabold transition hover:bg-blue-200"
+              className="h-[50px] rounded-xl bg-blue-100 text-2xl font-extrabold text-blue-800 shadow-sm ring-1 ring-blue-200 transition hover:-translate-y-0.5 hover:bg-blue-200 hover:shadow-md"
             >
               {value}
             </button>
@@ -265,7 +280,7 @@ function HomeForm({ form, nameInputRef, updateForm, addAmount, addTickets, onSub
 
       <button
         type="submit"
-        className="h-[55px] w-full rounded-md bg-blue-600 text-3xl font-extrabold text-white shadow-sm transition hover:bg-blue-700"
+        className="h-[55px] w-full rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-3xl font-extrabold text-white shadow-lg shadow-blue-500/25 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-500/30"
       >
         등록
       </button>
@@ -287,7 +302,7 @@ function RecentList({ gifts, onEdit, onDelete }) {
           {recentGifts.map((gift) => (
             <li
               key={gift.id}
-              className="grid grid-cols-[34px_1fr_auto] items-center gap-2 rounded-lg bg-white px-3 py-2 shadow-sm ring-1 ring-slate-100"
+              className="grid grid-cols-[34px_1fr_auto] items-center gap-2 rounded-2xl bg-white/90 px-3 py-2 shadow-sm ring-1 ring-white/80 backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md"
             >
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-sm font-extrabold text-slate-500">
                 {gift.number}
@@ -306,7 +321,7 @@ function RecentList({ gifts, onEdit, onDelete }) {
               <button
                 type="button"
                 onClick={() => onDelete(gift.id)}
-                className="rounded-md bg-red-50 px-3 py-2 text-sm font-extrabold text-red-600 ring-1 ring-red-200 transition hover:bg-red-100"
+                className="rounded-full bg-rose-50 px-3 py-2 text-sm font-extrabold text-rose-600 ring-1 ring-rose-200 transition hover:bg-rose-100"
                 aria-label={`${gift.name} 삭제`}
               >
                 삭제
@@ -323,7 +338,7 @@ function RecentList({ gifts, onEdit, onDelete }) {
   )
 }
 
-function SummaryTab({ gifts, totalAmount, totalTickets, onEdit, onDelete }) {
+function SummaryTab({ gifts, totalAmount, totalTickets, onEdit, onDelete, onDeleteAll }) {
   const reportRef = useRef(null)
 
   const exportXlsx = async () => {
@@ -385,33 +400,40 @@ function SummaryTab({ gifts, totalAmount, totalTickets, onEdit, onDelete }) {
     <section>
       <h2 className="mb-4 text-center text-2xl font-extrabold">요약 정보</h2>
 
-      <div className="mb-5 flex justify-center gap-2">
+      <div className="mb-5 flex flex-wrap justify-center gap-2">
         <button
           type="button"
           onClick={exportXlsx}
-          className="rounded-md bg-blue-500 px-5 py-3 text-base font-extrabold text-white transition hover:bg-blue-600"
+          className="rounded-full bg-blue-600 px-5 py-3 text-base font-extrabold text-white shadow-sm shadow-blue-500/20 transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md"
         >
           엑셀 다운로드
         </button>
         <button
           type="button"
           onClick={exportPdf}
-          className="rounded-md bg-blue-500 px-5 py-3 text-base font-extrabold text-white transition hover:bg-blue-600"
+          className="rounded-full bg-slate-950 px-5 py-3 text-base font-extrabold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md"
         >
           PDF 다운로드
         </button>
+        <button
+          type="button"
+          onClick={onDeleteAll}
+          className="rounded-full bg-rose-50 px-5 py-3 text-base font-extrabold text-rose-600 ring-1 ring-rose-200 transition hover:-translate-y-0.5 hover:bg-rose-100 hover:shadow-md"
+        >
+          전체 삭제
+        </button>
       </div>
 
-      <div className="mb-5 space-y-2 text-xl font-bold">
-        <p>총 금액: {formatWon(totalAmount)}</p>
-        <p>총 인원: {gifts.length}명</p>
-        <p>총 식권 수: {totalTickets}장</p>
+      <div className="mb-5 grid gap-3 text-xl font-bold sm:grid-cols-3">
+        <p className="rounded-2xl bg-white/85 p-4 shadow-sm ring-1 ring-white/80">총 금액<br />{formatWon(totalAmount)}</p>
+        <p className="rounded-2xl bg-white/85 p-4 shadow-sm ring-1 ring-white/80">총 인원<br />{gifts.length}명</p>
+        <p className="rounded-2xl bg-white/85 p-4 shadow-sm ring-1 ring-white/80">총 식권 수<br />{totalTickets}장</p>
       </div>
 
-      <div className="overflow-x-auto bg-white shadow-sm">
+      <div className="overflow-x-auto rounded-2xl bg-white/90 shadow-[0_16px_40px_rgba(15,23,42,0.08)] ring-1 ring-white/80">
         <table className="w-full min-w-[760px] border-collapse text-center">
           <thead>
-            <tr className="bg-[#eeeeee]">
+            <tr className="bg-slate-100">
               <th className="summary-cell">번호</th>
               <th className="summary-cell">이름</th>
               <th className="summary-cell">금액</th>
@@ -433,14 +455,14 @@ function SummaryTab({ gifts, totalAmount, totalTickets, onEdit, onDelete }) {
                     <button
                       type="button"
                       onClick={() => onEdit(gift)}
-                      className="rounded border border-neutral-300 px-3 py-1.5 text-sm font-bold"
+                      className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold transition hover:border-blue-300 hover:text-blue-700"
                     >
                       수정
                     </button>
                     <button
                       type="button"
                       onClick={() => onDelete(gift.id)}
-                      className="rounded border border-neutral-300 px-3 py-1.5 text-sm font-bold text-red-600"
+                      className="rounded-full border border-rose-200 bg-rose-50 px-3 py-1.5 text-sm font-bold text-rose-600 transition hover:bg-rose-100"
                     >
                       삭제
                     </button>
@@ -508,8 +530,7 @@ function SummaryEditModal({ gift, onClose, onSave }) {
     }
 
     const amount = Number(String(modalForm.amount).replaceAll(',', '')) || 0
-    if (!amount) {
-      alert('금액을 입력해주세요.')
+    if (!amount && !confirm('금액이 없습니다. 그대로 수정할까요?')) {
       return
     }
 
@@ -596,8 +617,8 @@ function TabButton({ active, onClick, children }) {
     <button
       type="button"
       onClick={onClick}
-      className={`h-14 text-xl font-extrabold ${
-        active ? 'text-black underline decoration-2 underline-offset-4' : 'text-neutral-500'
+      className={`h-12 rounded-full text-xl font-extrabold transition ${
+        active ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-900'
       }`}
     >
       {children}
