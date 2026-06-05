@@ -128,9 +128,9 @@ function App() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f8f8f8] px-4 pb-20 pt-5 text-black">
+    <main className="min-h-screen bg-[#f5f7fb] px-4 pb-20 pt-5 text-slate-950">
       <section className={`mx-auto ${activeTab === 'summary' ? 'max-w-5xl' : 'max-w-[460px]'}`}>
-        <h1 className="mb-5 text-center text-3xl font-extrabold tracking-normal">축의금장부</h1>
+        <h1 className="mb-5 text-center text-3xl font-extrabold tracking-normal">축의금 장부</h1>
 
         {activeTab === 'home' ? (
           <>
@@ -182,20 +182,17 @@ function App() {
 
 function HomeForm({ form, nameInputRef, updateForm, addAmount, addTickets, onSubmit }) {
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <div className="grid grid-cols-[150px_1fr] gap-3">
-        <label>
-          <span className="mb-1.5 block text-center text-xl font-extrabold">번호</span>
-          <input
-            value={form.number}
-            readOnly
-            className="compact-input bg-neutral-100 text-neutral-600"
-            inputMode="numeric"
-          />
-        </label>
+    <form onSubmit={onSubmit} className="space-y-4 rounded-lg bg-white p-4 shadow-sm ring-1 ring-slate-200">
+      <div className="grid grid-cols-[104px_1fr] items-end gap-3">
+        <div>
+          <span className="mb-1.5 block text-sm font-extrabold text-slate-500">번호</span>
+          <div className="flex h-[46px] items-center justify-center rounded-md bg-slate-950 text-2xl font-extrabold text-white">
+            {form.number}
+          </div>
+        </div>
 
         <label>
-          <span className="mb-1.5 block text-center text-xl font-extrabold">이름</span>
+          <span className="mb-1.5 block text-sm font-extrabold text-slate-500">이름</span>
           <input
             ref={nameInputRef}
             value={form.name}
@@ -206,7 +203,7 @@ function HomeForm({ form, nameInputRef, updateForm, addAmount, addTickets, onSub
       </div>
 
       <label className="block">
-        <span className="mb-1.5 block text-center text-xl font-extrabold">메모</span>
+        <span className="mb-1.5 block text-sm font-extrabold text-slate-500">메모</span>
         <input
           value={form.memo}
           onChange={(event) => updateForm('memo', event.target.value)}
@@ -214,57 +211,61 @@ function HomeForm({ form, nameInputRef, updateForm, addAmount, addTickets, onSub
         />
       </label>
 
-      <div className="flex items-center gap-3 text-2xl font-extrabold">
-        <span className="flex-1">현재 금액: {formatWon(form.amount)}</span>
-        <button
-          type="button"
-          onClick={() => updateForm('amount', 0)}
-          className="rounded-md bg-red-50 px-3 py-2 text-base font-extrabold text-red-600 ring-1 ring-red-200 transition hover:bg-red-100"
-        >
-          금액 초기화
-        </button>
-      </div>
-
-      <div className="grid grid-cols-4 gap-2">
-        {amountOptions.map(([label, value]) => (
+      <div className="rounded-lg bg-slate-50 p-3 ring-1 ring-slate-100">
+        <div className="mb-3 flex items-center gap-3">
+          <span className="flex-1 text-xl font-extrabold">현재 금액: {formatWon(form.amount)}</span>
           <button
-            key={label}
             type="button"
-            onClick={() => addAmount(value)}
-            className="h-[50px] rounded-md bg-[#eeeeee] text-2xl font-extrabold transition hover:bg-[#e4e4e4]"
+            onClick={() => updateForm('amount', 0)}
+            className="rounded-md bg-red-50 px-3 py-2 text-base font-extrabold text-red-600 ring-1 ring-red-200 transition hover:bg-red-100"
           >
-            {label}
+            금액 초기화
           </button>
-        ))}
+        </div>
+
+        <div className="grid grid-cols-4 gap-2">
+          {amountOptions.map(([label, value]) => (
+            <button
+              key={label}
+              type="button"
+              onClick={() => addAmount(value)}
+              className="h-[50px] rounded-md bg-[#eeeeee] text-2xl font-extrabold transition hover:bg-[#e4e4e4]"
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="flex items-center gap-3 text-2xl font-extrabold">
-        <span className="flex-1">식권: {form.tickets}장</span>
-        <button
-          type="button"
-          onClick={() => updateForm('tickets', 0)}
-          className="rounded-md bg-red-50 px-3 py-2 text-base font-extrabold text-red-600 ring-1 ring-red-200 transition hover:bg-red-100"
-        >
-          식권 초기화
-        </button>
-      </div>
-
-      <div className="grid grid-cols-3 gap-2">
-        {ticketOptions.map((value) => (
+      <div className="rounded-lg bg-blue-50 p-3 ring-1 ring-blue-100">
+        <div className="mb-3 flex items-center gap-3">
+          <span className="flex-1 text-xl font-extrabold">식권: {form.tickets}장</span>
           <button
-            key={value}
             type="button"
-            onClick={() => addTickets(value)}
-            className="h-[50px] rounded-md bg-blue-100 text-2xl font-extrabold transition hover:bg-blue-200"
+            onClick={() => updateForm('tickets', 0)}
+            className="rounded-md bg-red-50 px-3 py-2 text-base font-extrabold text-red-600 ring-1 ring-red-200 transition hover:bg-red-100"
           >
-            {value}
+            식권 초기화
           </button>
-        ))}
+        </div>
+
+        <div className="grid grid-cols-3 gap-2">
+          {ticketOptions.map((value) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => addTickets(value)}
+              className="h-[50px] rounded-md bg-blue-100 text-2xl font-extrabold transition hover:bg-blue-200"
+            >
+              {value}
+            </button>
+          ))}
+        </div>
       </div>
 
       <button
         type="submit"
-        className="h-[55px] w-full rounded-md bg-blue-500 text-3xl font-extrabold text-white transition hover:bg-blue-600"
+        className="h-[55px] w-full rounded-md bg-blue-600 text-3xl font-extrabold text-white shadow-sm transition hover:bg-blue-700"
       >
         등록
       </button>
@@ -278,7 +279,7 @@ function RecentList({ gifts, onEdit, onDelete }) {
   return (
     <section className="mt-6">
       <div className="mb-3">
-        <h2 className="text-2xl font-extrabold">최근 등록</h2>
+        <h2 className="text-xl font-extrabold">최근 등록</h2>
       </div>
 
       {recentGifts.length ? (
@@ -286,9 +287,11 @@ function RecentList({ gifts, onEdit, onDelete }) {
           {recentGifts.map((gift) => (
             <li
               key={gift.id}
-              className="grid grid-cols-[36px_1fr_auto] items-center gap-2 rounded-md bg-white px-3 py-2 shadow-sm"
+              className="grid grid-cols-[34px_1fr_auto] items-center gap-2 rounded-lg bg-white px-3 py-2 shadow-sm ring-1 ring-slate-100"
             >
-              <span className="text-lg font-extrabold text-neutral-400">{gift.number}</span>
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-sm font-extrabold text-slate-500">
+                {gift.number}
+              </span>
               <button type="button" onClick={() => onEdit(gift)} className="min-w-0 text-left">
                 <span className="block truncate text-lg font-extrabold">{gift.name}</span>
                 <span className="block text-sm font-bold text-neutral-500">
